@@ -1,0 +1,28 @@
+
+  <!DOCTYPE html>
+<html lang="cs">    
+  <head>       
+    <meta charset="utf-8">          
+    <title>Kubooks</title> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login_style.css') }}">
+
+  </head>
+
+  <h1>Kubooks</h1>
+
+  <body>
+    <div class="wrapper fadeInDown">
+      <div id="formContent">
+        <!-- Tabs Titles -->
+        <h2 class="active"> &#x1F44B</h2>
+    
+        <form action="/" method="POST">
+          <!--<input type="text" id="login" class="fadeIn second" name="login" placeholder="login">-->
+          <input type="password" id="password" class="fadeIn third" name="password" placeholder="password">
+          <input type="submit" class="fadeIn fourth" value="Log In">
+        </form>
+    
+      </div>
+    </div>
+  </body>
+</html>

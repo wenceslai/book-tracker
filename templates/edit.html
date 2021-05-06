@@ -13,25 +13,34 @@
     <ul id="main">
       <li><a href = "/">List</a></li>
       <li><a href="/statistics">Statistics</a></li>
-      <li><a href="/about_cnn">About</a></li>
+      <li><a href="/about">About</a></li>
     </ul>
-    
 
     {% if to_edit == False %}
-    <form action="/" method="POST">
-      Name*:<input type="text" name="name" value="" required>
+    <form action="/edit" method="POST">
+      Name*:<input type="text" name="name" id="name" value="" required>
       Author*:<input type="text" name="author" value="" required> <br>
-      Category: <select name="category_id" value="">
-        
+      Category: <select name="category_id" value=""> 
         {% for row in categories %}
           <option value="{{ row[0] }}">{{ row[1] }}</option>
         {% endfor %}
+      </select>
+
+      Language: <select name="language_id" value=""> 
+        {% for row in languages %}
+          <option value="{{ row[0] }}">{{ row[1] }}</option>
+        {% endfor %}
       </select> <br>
+
       Page count: <input type="number" name="pages" value=""> <br>
       Added: <input type="date", name="added_date" value="">
       Started: <input type="date", name="start_date" value="">
       Finished: <input type="date", name="finish_date" value=""> <br>
+
+      <br> Notes: <br> <textarea name="notes" rows="4" cols="40"></textarea> <br>
       
+      <br>
+
       <input type="submit" value="Submit book">
       <input name="update" type="hidden", value="">
     </form>
@@ -41,9 +50,10 @@
     <p>Editing mode</p>
     {% for row in book_to_edit %}
     
-    <form action="/" method="POST">
+    <form action="/edit" method="POST">
       Name:<input type="text" name="name" value="{{ row[1] }}" required>
       Author:<input type="text" name="author" value="{{ row[2] }}" required> <br>
+      
       Category: <select name="category_id" value="{{ row[8] }}" required>
         {% for cat_row in categories %}
           {% if cat_row[0] == row[8] %}
@@ -52,7 +62,17 @@
             <option value="{{ cat_row[0] }}">{{ cat_row[1] }}</option>
           {% endif %}  
         {% endfor %}
-      </select> <br>
+      </select>
+
+      Language: <select name="language_id" value="{{ row[9] }}" required>
+        {% for l_row in languages %}
+          {% if l_row[0] == row[8] %}
+            <option value="{{ l_row[0] }}" selected>{{ l_row[1] }}</option>
+          {% else %}
+            <option value="{{ l_row[0] }}">{{ l_row[1] }}</option>
+          {% endif %}  
+        {% endfor %}
+      </select>
       
       {% if row[6] is not none %}
         Page count: <input type="number" name="pages" value="{{ row[6] }}"> <br>
@@ -78,9 +98,12 @@
       Finished: <input type="date", name="finish_date" value="" required> <br>
       {% endif %}
       
+      <br> Notes: <br> <textarea name="notes" rows="4" cols="40"></textarea> <br>
       
       <input name="book_id" type="hidden" value="{{ row[0] }}">
       
+      <br>
+
       <input type="submit" value="Submit book">
       <input name="submit_edit" type="hidden", value="">
     </form>
@@ -105,16 +128,17 @@
       {% endfor %}
       <td>{{ row[3][8:10] }}.{{ row[3][5:7] }}.{{ row[3][0:4] }}</td> 
 
-        <td id="buttons">
-          <form action="/" method="POST">
+
+        <td id="edit-button">
+          <form action="/edit" method="POST">
             <input name="book_id" type="hidden" value="{{ row[0] }}">
             <input name="edit" type="hidden", value="">
             <input type="submit" value="edit">
           </form>
         </td>
 
-         <td id="buttons">
-          <form action="/" method="POST">
+         <td id="delete-button">
+          <form action="/edit" method="POST">
             <input name="book_id" type="hidden" value="{{ row[0] }}">
             <input name="delete" type="hidden", value="">
             <input type="submit" value="delete">
@@ -136,6 +160,7 @@
         <th>Finished</th>
         <th>Pages</th>
         <th>Category</th>
+        <th>Language</th>
       </tr>
       {% for row in read_books %}
       <tr>
@@ -153,7 +178,7 @@
       {% endfor %}
       
         <td>
-          <form action="/" method="POST">
+          <form action="/edit" method="POST">
             <input name="book_id" type="hidden" value="{{ row[0] }}">
             <input name="edit" type="hidden", value="">
             <input type="submit" value="edit">
@@ -161,7 +186,7 @@
         </td>
 
          <td>
-          <form action="/" method="POST">
+          <form action="/edit" method="POST">
             <input name="book_id" type="hidden" value="{{ row[0] }}">
             <input name="delete" type="hidden", value="">
             <input type="submit" value="delete">
