@@ -4,6 +4,13 @@ from datetime import datetime
 import os
 import pandas as pd
 
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib.ticker import MaxNLocator
+import matplotlib.pyplot as plt
+
+import numpy as np
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///books.db'
 
@@ -155,9 +162,9 @@ def edit():
             print("succesfully deleted book")         
     
     
-    read_books = db.session.execute("SELECT b.id, b.name, b.author, b.added_date, b.start_date, b.finish_date, b.pages, c.name, l.name FROM BOOKS b JOIN  CATEGORIES c ON (b.category_id = c.id) JOIN LANGUAGES l ON (b.language_id = l.id) WHERE finish_date IS NOT NULL")
+    read_books = db.session.execute("SELECT b.id, b.name, b.author, b.added_date, b.start_date, b.finish_date, b.pages, c.name, l.name FROM BOOKS b JOIN  CATEGORIES c ON (b.category_id = c.id) JOIN LANGUAGES l ON (b.language_id = l.id) WHERE finish_date IS NOT NULL ORDER BY b.finish_date DESC")
     
-    not_read_books = db.session.execute("SELECT b.id, b.name, b.author, b.added_date, b.start_date, b.finish_date, b.pages, c.name, l.name, b.notes FROM BOOKS b JOIN  CATEGORIES c ON (b.category_id = c.id) JOIN LANGUAGES l ON (b.language_id = l.id) WHERE finish_date IS NULL")
+    not_read_books = db.session.execute("SELECT b.id, b.name, b.author, b.added_date, b.start_date, b.finish_date, b.pages, c.name, l.name, b.notes FROM BOOKS b JOIN  CATEGORIES c ON (b.category_id = c.id) JOIN LANGUAGES l ON (b.language_id = l.id) WHERE finish_date IS NULL ORDER BY b.finish_date DESC")
     
     categories = db.session.execute('SELECT * FROM CATEGORIES')
     
@@ -174,16 +181,45 @@ def edit():
 def stats():
     # using finish date
     
-    #year_averages = db.session.execute("SELECT COUNT(book_id) / COUNT(DISTINCT TO_CHAR(finish_date, 'YYYY')), SUM(pages) / COUNT(DISTINCT TO_CHAR(finish_date, 'YYYY')) FROM BOOKS")
-    #totals = db.session.execute("SELECT COUNT(book_id), AVG(pages)")
-    #all_data = db.session.execute("SELECT * FROM BOOKS b JOIN  CATEGORIES c ON (b.category_id = c.id) JOIN LANGUAGES l ON (b.language_id = l.id) WHERE finish_date IS NOT NULL")
+    df = pd.read_sql(db.session.query(Books, Categories, Languages).join(Categories, Books.category_id == Categories.id).join(Languages, Books.language_id == Languages.id).statement, db.session.bind)
+   
+    df.to_csv("books_df.csv") # meeeeeeeeh
+    df = pd.read_csv("books_df.csv")
     
-    df = pd.read_sql(db.session.query(Books, Categories, Languages).filter(Books.category_id == Categories.id and Books.language_id == Languages.id).statement, db.session.bind)
-    
-    
+    df = df[df['finish_date'].notna()]
+    df = df.drop_duplicates()
 
-    return render_template("statistics.html")
+    df["finish_date"] = pd.to_datetime(df["finish_date"])
+    df["added_date"] = pd.to_datetime(df["added_date"])
+    df["start_date"] = pd.to_datetime(df["start_date"])
+    
+    year_avg = df.groupby(df['finish_date'].map(lambda x: x.year))["id"].count()
+    
+    #ax = year_avg.plot()
+    years = df['finish_date'].map(lambda x: x.year).sort_values(ascending=True).unique().astype(np.int32)
+    plt.xticks(range(years[0], years[-1]))
+    plt.plot(year_avg, years, 'bo')
+    
+    #fig = ax.get_figure()
+    plt.savefig("static/images/annual_counts.png")
+
+    total_stats = {
+        "cnt" : df.id.count(),
+        "pages" : df["pages"].sum(),
+        "cz_cnt" : df[df["name.2"] == "CZ"].id.count(),
+        "en_cnt" : df[df["name.2"] == "EN"].id.count(),
+        "year_avg" : sum(year_avg) / len(year_avg),
+    }
+    
+    annual_stats = {
+        "years" : df['finish_date'].map(lambda x: x.year).sort_values(ascending=False).unique(),
+        "total_cnt" : dict(df.groupby(df['finish_date'].map(lambda x: x.year))["id"].count()),
+        "total_pages" : dict(df.groupby(df['finish_date'].map(lambda x: x.year))["pages"].sum()),
+        "total_cz" : dict(df[df["name.2"] == "CZ"].groupby(df['finish_date'].map(lambda x: x.year)).id.count()),
+        "total_en" : dict(df[df["name.2"] == "EN"].groupby(df['finish_date'].map(lambda x: x.year)).id.count()),
+    }
+   
+    return render_template("statistics.html", total_stats=total_stats, annual_stats=annual_stats)
 
 if __name__ == '__main__': 
-          app.run(host=os.getenv('IP', '0.0.0.0'), 
-            port=int(os.getenv('PORT', 4444))) 
+          app.run() 

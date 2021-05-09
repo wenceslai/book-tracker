@@ -11,12 +11,41 @@
 
   <body> 
     <ul id="main">
-      <li><a href = "/">List</a></li>
+      <li><a href = "/edit">List</a></li>
       <li><a href="/statistics">Statistics</a></li>
-      <li><a href="/about">About</a></li>
+      <li><a href="/">Log out</a></li>
     </ul>
 
+    <h2>Total stats</h2>
+
+    <ul>
     
+      <li>Books read: {{ total_stats["cnt"] }}</li>
+      <li>Annual average: {{ total_stats["year_avg"] }}</li>
+      <br>
+      <li>Czech books read: {{ total_stats["cz_cnt"] }}</li>
+      <li>English books read: {{ total_stats["en_cnt"] }}</li>
+      <br>
+      <li>Total read pages: {{ total_stats["pages"] }}</li>
+      <br>
+
+      <center><img src="{{url_for('static', filename='images/annual_counts.png')}}", height="500"></center>
+      
+
+      {% for year in annual_stats["years"] %}
+
+      <h2>{{ year }}</h2>
+        <ul>
+        <li>Books read: {{ annual_stats["total_cnt"][year] }}</li>
+        <li>Czech books read: {{ annual_stats["total_cz"][year] }}</li>
+        <li>English books read: {{ annual_stats["total_en"][year] }}</li>
+        <li>Total read pages: {{ annual_stats["total_pages"][year] }}</li>
+
+       </ul>
+      {% endfor %}
+      
+
+    </ul>
 
 
 
