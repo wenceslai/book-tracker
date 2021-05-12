@@ -13,7 +13,7 @@
     <ul id="main">
       <li><a href = "/edit">List</a></li>
       <li><a href="/statistics">Statistics</a></li>
-      <li><a href="/">Log out</a></li>
+      <li><a href="/logout">Log out</a></li>
     </ul>
 
     {% if to_edit == False %}
@@ -155,7 +155,6 @@
       <tr>
         <th>Book</th>
         <th>Author</th>
-        <th>Added</th>
         <th>Started</th>
         <th>Finished</th>
         <th>Pages</th>
@@ -168,9 +167,13 @@
       {% for value in row[1:3] %}
         <td>{{ value }}</td>
       {% endfor %} 
-
-      {% for date in row[3:6] %}
+      
+      {% for date in row[4:6] %}
+        {% if date is not none %}
         <td>{{ date[8:10] }}.{{ date[5:7] }}.{{ date[0:4] }}   </td>
+        {% else %}
+        <td>/</td>
+        {% endif %}
       {% endfor %}
 
       {% for value in row[6:] %}

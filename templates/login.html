@@ -14,11 +14,16 @@
     <div class="wrapper fadeInDown">
       <div id="formContent">
         <!-- Tabs Titles -->
+        {% if wrong_login %}
+        <h2 class="active"> &#x1F44E</h2>
+        {% else %}
         <h2 class="active"> &#x1F44B</h2>
+        {% endif %}
+
     
         <form action="/" method="POST">
           <!--<input type="text" id="login" class="fadeIn second" name="login" placeholder="login">-->
-          <input type="password" id="password" class="fadeIn third" name="password" placeholder="password">
+          <input type="password" id="password" class="fadeIn third" name="password" placeholder="password" required>
           <input type="submit" class="fadeIn fourth" value="Log In">
         </form>
     
