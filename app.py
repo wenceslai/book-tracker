@@ -79,7 +79,7 @@ def login():
     if request.method == "POST":
         session.pop('user', None)
         
-        if request.form["password"] == "1234":
+        if request.form["password"] == "3750":
             session['user'] = "wenceslai"
             return redirect(url_for('edit'))
 
@@ -217,20 +217,30 @@ def stats():
         
         year_avg = df.groupby(df['finish_date'].map(lambda x: x.year))["id"].count()
         
-        #ax = year_avg.plot()
         years = df['finish_date'].map(lambda x: x.year).sort_values(ascending=True).unique().astype(np.int32)
-        plt.xticks(range(years[0], years[-1]))
-        plt.plot(year_avg, years, 'bo')
         
-        #fig = ax.get_figure()
+        plt.figure(0)
+        plt.xticks(range(years[0], years[-1]))
+        plt.title("Number of books read each year")
+        plt.plot(years, year_avg, '-o')
+        
         plt.savefig("static/images/annual_counts.png")
 
+        year_pages = df.groupby(df['finish_date'].map(lambda x: x.year))["pages"].sum()
+
+        plt.figure(1)
+        plt.xticks(range(years[0], years[-1]))
+        plt.title("Number of read pages each year")
+        plt.plot(years, year_pages, '-o', color="red")
+
+        plt.savefig("static/images/annual_pages.png")
+        
         total_stats = {
             "cnt" : df.id.count(),
             "pages" : df["pages"].sum(),
             "cz_cnt" : df[df["name.2"] == "CZ"].id.count(),
             "en_cnt" : df[df["name.2"] == "EN"].id.count(),
-            "year_avg" : sum(year_avg) / len(year_avg),
+            "year_avg" : round(sum(year_avg) / len(year_avg), 2),
         }
         
         annual_stats = {

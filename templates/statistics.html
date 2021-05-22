@@ -29,9 +29,10 @@
       <li>Total read pages: {{ total_stats["pages"] }}</li>
       <br>
 
-      <center><img src="{{url_for('static', filename='images/annual_counts.png')}}", height="500"></center>
+      <center><img src="{{url_for('static', filename='images/annual_counts.png')}}", height="500">
       
-
+      <img src="{{url_for('static', filename='images/annual_pages.png')}}", height="500"></center>
+      
       {% for year in annual_stats["years"] %}
 
       <h2>{{ year }}</h2>
