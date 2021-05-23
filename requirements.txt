@@ -3,4 +3,5 @@ numpy
 flask-sqlalchemy 
 pandas
 matplotlib
+Werkzeug
 gunicorn
