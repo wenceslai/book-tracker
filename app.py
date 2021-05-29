@@ -15,7 +15,8 @@ import numpy as np
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///books.db'
 
-app.secret_key = os.urandom(24)
+#app.secret_key = os.urandom(24)
+app.secret_key = '\xfd{H\xe5<\x95\xf9\xe3\x96.5\xd1\x01O<!\xd5\xa2\xa0\x9fR"\xa1\xa8'
 
 db = SQLAlchemy(app)
 
@@ -71,11 +72,6 @@ db.session.add(Languages(name='EN'))
 
 db.session.commit()
 """
-
-@app.after_request
-def add_header(response):
-    response.cache_control.max_age = 300
-    return response
 
 @app.route("/", methods=['GET', 'POST'])
 def login():
