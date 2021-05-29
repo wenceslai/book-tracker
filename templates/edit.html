@@ -47,7 +47,7 @@
 
     {% elif to_edit == True %}
 
-    <p>Editing mode</p>
+    <p><strong><i>Editing mode</i></strong></p>
     {% for row in book_to_edit %}
     
     <form action="/edit" method="POST">
@@ -89,13 +89,13 @@
       {% if row[4] is not none %}
         Started: <input type="date", name="start_date" value="{{ row[4][:10] }}">
       {% else %}
-        Started: <input type="date", name="start_date" value="" required>
+        Started: <input type="date", name="start_date" value="">
       {% endif %}
 
       {% if row[5] is not none %}
         Finished: <input type="date", name="finish_date" value="{{ row[5][:10] }}"> <br>
       {% else %}
-      Finished: <input type="date", name="finish_date" value="" required> <br>
+      Finished: <input type="date", name="finish_date" value=""> <br>
       {% endif %}
       
       <br> Notes: <br> <textarea name="notes" rows="4" cols="40"></textarea> <br>

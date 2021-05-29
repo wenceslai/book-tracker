@@ -207,8 +207,6 @@ def stats():
 
         df.to_csv("books_df.csv") # this is really bad, not working plain read sql 
         df = pd.read_csv("books_df.csv")
-
-        print(df.head())
         
         df = df[df['finish_date'].notna()]
         df = df.drop_duplicates()
