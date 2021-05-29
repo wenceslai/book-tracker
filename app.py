@@ -72,6 +72,10 @@ db.session.add(Languages(name='EN'))
 db.session.commit()
 """
 
+@app.after_request
+def add_header(response):
+    response.cache_control.max_age = 300
+    return response
 
 @app.route("/", methods=['GET', 'POST'])
 def login():
