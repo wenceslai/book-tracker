@@ -240,8 +240,8 @@ def stats():
         total_stats = {
             "cnt" : df.id.count(),
             "pages" : df["pages"].sum(),
-            "cz_cnt" : df[df["name.2"] == "CZ"].id.count(),
-            "en_cnt" : df[df["name.2"] == "EN"].id.count(),
+            "cz_cnt" : df[df["name_2"] == "CZ"].id.count(),
+            "en_cnt" : df[df["name_2"] == "EN"].id.count(),
             "year_avg" : round(sum(year_avg) / len(year_avg), 2),
         }
         
@@ -249,8 +249,8 @@ def stats():
             "years" : df['finish_date'].map(lambda x: x.year).sort_values(ascending=False).unique(),
             "total_cnt" : dict(df.groupby(df['finish_date'].map(lambda x: x.year))["id"].count()),
             "total_pages" : dict(df.groupby(df['finish_date'].map(lambda x: x.year))["pages"].sum()),
-            "total_cz" : dict(df[df["name.2"] == "CZ"].groupby(df['finish_date'].map(lambda x: x.year)).id.count()),
-            "total_en" : dict(df[df["name.2"] == "EN"].groupby(df['finish_date'].map(lambda x: x.year)).id.count()),
+            "total_cz" : dict(df[df["name_2"] == "CZ"].groupby(df['finish_date'].map(lambda x: x.year)).id.count()),
+            "total_en" : dict(df[df["name_2"] == "EN"].groupby(df['finish_date'].map(lambda x: x.year)).id.count()),
         }
     
         return render_template("statistics.html", total_stats=total_stats, annual_stats=annual_stats)
