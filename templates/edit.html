@@ -14,6 +14,7 @@
       <li><a href = "/edit">List</a></li>
       <li><a href="/statistics">Statistics</a></li>
       <li><a href="/logout">Log out</a></li>
+      <li><a href="" download="books.db">Download database</a></li>
     </ul>
 
     {% if to_edit == False %}
@@ -81,7 +82,7 @@
       {% endif %}
 
       {% if row[3] is not none %}
-        Added: <input type="date", name="added_date" value="{{ row[3][:10] }}"> 
+        Added: <input type="date", name="added_date" value="{{ row[3][:10] }}" required> 
       {% else %}
         Added: <input type="date", name="added_date" value="" required> 
       {% endif %}

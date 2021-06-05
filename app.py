@@ -256,7 +256,7 @@ def stats():
             "cz_cnt" : df[df["name_2"] == "CZ"].id.count(),
             "en_cnt" : df[df["name_2"] == "EN"].id.count(),
             "year_avg" : round(sum(year_avg) / len(year_avg), 2),
-            "top_cats" : df.groupby(df["name.1"])["id"].count().sort_values(ascending=False).iloc[0:6]
+            "top_cats" : df.groupby(df["name_1"])["id"].count().sort_values(ascending=False).iloc[0:6]
         }
         
         annual_stats = {
