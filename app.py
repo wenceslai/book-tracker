@@ -1,4 +1,4 @@
-from flask import Flask, render_template, has_request_context, request, url_for, redirect, g, url_for
+from flask import Flask, render_template, send_file, request, url_for, redirect, g, url_for
 from flask.globals import session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -273,5 +273,11 @@ def stats():
         return redirect(url_for('login'))
 
 
+@app.route('/download')
+def downloadFile ():
+    path = "books.db"
+    return send_file(path, as_attachment=True)
+
+
 if __name__ == '__main__': 
-          app.run(host='0.0.0.0',port="8000")
+          app.run(host='0.0.0.0', port="8000")
