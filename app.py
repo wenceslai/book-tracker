@@ -66,12 +66,21 @@ db.session.add(Categories(name='science paper'))
 db.session.add(Categories(name='science'))
 db.session.add(Categories(name='mythology'))
 db.session.add(Categories(name='mathematics'))
+db.session.add(Categories(name='novel'))
+db.session.add(Categories(name='fantasy'))
+db.session.add(Categories(name='sci-fi'))
+db.session.add(Categories(name='biography'))
+db.session.add(Categories(name='politics'))
+
 
 db.session.add(Languages(name='CZ'))
 db.session.add(Languages(name='EN'))
 
 db.session.commit()
 """
+
+
+
 
 @app.route("/", methods=['GET', 'POST'])
 def login():
@@ -143,11 +152,17 @@ def edit():
             elif 'submit_edit' in request.form:
                 book = Books.query.get(request.form["book_id"])
                 
+                if not request.form["start_date"]: start_date = None
+                else: start_date = date2datetime(request.form["start_date"])
+
+                if not request.form["finish_date"]: finish_date = None
+                else: finish_date = date2datetime(request.form["finish_date"])
+
                 book.name=request.form["name"]
                 book.author=request.form["author"]
                 book.added_date=date2datetime(request.form["added_date"])
-                book.start_date=date2datetime(request.form["start_date"])
-                book.finish_date=date2datetime(request.form["finish_date"])
+                #book.start_date=date2datetime(request.form["start_date"])
+                #book.finish_date=date2datetime(request.form["finish_date"])
                 book.category_id=request.form["category_id"]
                 book.language_id=request.form["language_id"]
                 book.pages=request.form["pages"]
@@ -241,6 +256,7 @@ def stats():
             "cz_cnt" : df[df["name_2"] == "CZ"].id.count(),
             "en_cnt" : df[df["name_2"] == "EN"].id.count(),
             "year_avg" : round(sum(year_avg) / len(year_avg), 2),
+            "top_cats" : df.groupby(df["name.1"])["id"].count().sort_values(ascending=False).iloc[0:6]
         }
         
         annual_stats = {

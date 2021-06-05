@@ -28,11 +28,26 @@
       <br>
       <li>Total read pages: {{ total_stats["pages"] }}</li>
       <br>
+      <li>Most read categories
+        <table>
+          {% for key in total_stats["top_cats"].keys() %}
+            <tr>
+              <td>{{ key }}</td>
+              <td>{{ total_stats["top_cats"][key] }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+      </li>
+
 
       <center><img src="{{url_for('static', filename='images/annual_counts.png')}}", height="500">
       
       <img src="{{url_for('static', filename='images/annual_pages.png')}}", height="500"></center>
       
+      </ul>
+      
+      <h2>Annual stats</h2>
+
       {% for year in annual_stats["years"] %}
 
       <h2>{{ year }}</h2>
@@ -46,7 +61,7 @@
       {% endfor %}
       
 
-    </ul>
+    
 
 
 
