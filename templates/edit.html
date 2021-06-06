@@ -156,7 +156,6 @@
       <tr>
         <th>Book</th>
         <th>Author</th>
-        <th>Started</th>
         <th>Finished</th>
         <th>Pages</th>
         <th>Category</th>
@@ -169,7 +168,7 @@
         <td>{{ value }}</td>
       {% endfor %} 
       
-      {% for date in row[4:6] %}
+      {% for date in row[5:6] %}
         {% if date is not none %}
         <td>{{ date[8:10] }}.{{ date[5:7] }}.{{ date[0:4] }}   </td>
         {% else %}

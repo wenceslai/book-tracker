@@ -161,8 +161,8 @@ def edit():
                 book.name=request.form["name"]
                 book.author=request.form["author"]
                 book.added_date=date2datetime(request.form["added_date"])
-                #book.start_date=date2datetime(request.form["start_date"])
-                #book.finish_date=date2datetime(request.form["finish_date"])
+                book.start_date=start_date
+                book.finish_date=finish_date
                 book.category_id=request.form["category_id"]
                 book.language_id=request.form["language_id"]
                 book.pages=request.form["pages"]
@@ -231,11 +231,13 @@ def stats():
         df["start_date"] = pd.to_datetime(df["start_date"])
         
         year_avg = df.groupby(df['finish_date'].map(lambda x: x.year))["id"].count()
-        
+       
+        year_avg_without_last = year_avg.iloc[0:-1]
+
         years = df['finish_date'].map(lambda x: x.year).sort_values(ascending=True).unique().astype(np.int32)
-        
+
         plt.figure(0)
-        plt.xticks(range(years[0], years[-1]))
+        plt.xticks(range(years[0], years[-1] + 1))
         plt.title("Number of books read each year")
         plt.plot(years, year_avg, '-o')
         
@@ -244,7 +246,7 @@ def stats():
         year_pages = df.groupby(df['finish_date'].map(lambda x: x.year))["pages"].sum()
 
         plt.figure(1)
-        plt.xticks(range(years[0], years[-1]))
+        plt.xticks(range(years[0], years[-1] + 1))
         plt.title("Number of read pages each year")
         plt.plot(years, year_pages, '-o', color="red")
 
@@ -255,7 +257,7 @@ def stats():
             "pages" : df["pages"].sum(),
             "cz_cnt" : df[df["name_2"] == "CZ"].id.count(),
             "en_cnt" : df[df["name_2"] == "EN"].id.count(),
-            "year_avg" : round(sum(year_avg) / len(year_avg), 2),
+            "year_avg" : round(sum(year_avg_without_last) / len(year_avg_without_last), 2),
             "top_cats" : df.groupby(df["name_1"])["id"].count().sort_values(ascending=False).iloc[0:6]
         }
         
